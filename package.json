@@ -1,0 +1,11 @@
+{
+  "name": "terminal-tales-backend",
+  "version": "1.0.0",
+  "description": "blogging website for all coders out there who share different domains but at the end love to share what they do.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nikhil Sinha",
+  "license": "ISC"
+}
