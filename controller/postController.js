@@ -4,6 +4,7 @@ const getPosts = async (req,res) => {
     const post = await Post.find();
     if(!post.length)
         return res.status(201).json({"message": "No Post found"})
+    
     res.json(post);
 }
 const createPosts = async (req,res) => {
@@ -12,41 +13,42 @@ const createPosts = async (req,res) => {
     }
     const {title, body, datetime} = req.body;
     try {
-        await Post.create({
+        const response = await Post.create({
             title,
             body,
             datetime
         })
-        res.status(200).json({message: "successfully created"});
+        const id = response._id.toHexString();
+        res.status(200).json({id});
     }
     catch(err){
         console.log(err);
     }
 }
 const updatePosts = async(req,res) => {
-    if(!req?.body?.id || !req?.body?.title || !req?.body?.datetime || !req?.body?.body){
+    if(!req?.params?.id){
         return res.status(400).json({message: "Not sufficient information provided"});
     }
-    const post = Post.findOne({_id: req.body.id}).exec();
+    const post = await Post.findOne({_id: req.params.id}).exec();
     if(!post){
         return res.status(204).json({message: `NO such Post found`});
     }
-    const {title, body, dateTime} = req.body;
+    const {title, body, datetime} = req.body;
     post.body=body;
     post.title=title;
-    post.dateTime=dateTime
+    post.datetime=datetime
     const result = await post.save();
     res.json(result);
 }
-const deletePosts =async (req,res) => {
-    if(!req?.body?.id){
+const deletePosts = async (req,res) => {
+    if(!req?.params?.id){
         return res.status(400).json({message: "Not sufficient information provided"});
     }
-    const post = Post.findOne({_id: req.body.id}).exec();
+    const post = await Post.findOne({_id: req.params.id}).exec();
     if(!post){
         return res.status(204).json({message: `NO such Post found`});
     }
-    const result = deleteOne({_id: req.body.id});
+    const result = await post.deleteOne({_id: req.body.id});
     res.json(result);
 }
 
