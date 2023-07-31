@@ -3,16 +3,22 @@ const app = express();
 const PORT = process.env.PORT || 3500;
 const cors = require('cors')
 const corsOption = require('./config/corsOption')
-
+const mongoose = require('mongoose')
+const connectDB = require("./config/dbCon")
 require('dotenv').config();
+
+connectDB();
 
 app.use(cors(corsOption))
 app.use(express.json());
-app.use(express.urlencoded({extended: flase}));
+app.use(express.urlencoded({extended: false}));
 
 
 app.use('/',(req,res)=>{
     res.send("Hello world")
 })
 
-app.listen(PORT, ()=>console.log(`server is live at ${PORT}`))
+mongoose.connection.once("open", () => {
+    console.log("Connected to mongoDB");
+    app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+});
