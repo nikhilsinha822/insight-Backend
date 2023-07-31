@@ -14,9 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 
-app.use('/',(req,res)=>{
-    res.send("Hello world")
-})
+app.use('/',require('./routes/api/post'))
 
 mongoose.connection.once("open", () => {
     console.log("Connected to mongoDB");
