@@ -1,5 +1,6 @@
 
 const Post = require('../models/post')
+const deleteImage = require("../middleware/deletePhoto")
 
 const getPosts = async (req,res) => {
     const post = await Post.find();
@@ -36,11 +37,15 @@ const updatePosts = async(req,res) => {
     if(!post){
         return res.status(204).json({message: `NO such Post found`});
     }
-    const {title, body, datetime, image} = req.body;
+    const {title, body, datetime, image, imgId} = req.body;
     post.body=body;
     post.title=title;
     post.datetime=datetime
-    post.image=image
+    if(image){ 
+        await deleteImage(post.imgId);
+        post.image=image
+        post.imgId=imgId
+    }
     const result = await post.save();
     res.json(result);
 }
@@ -49,6 +54,7 @@ const deletePosts = async (req,res) => {
         return res.status(400).json({message: "Not sufficient information provided"});
     }
     const post = await Post.findOne({_id: req.params.id}).exec();
+    await deleteImage(post.imgId);
     if(!post){
         return res.status(204).json({message: `NO such Post found`});
     }
