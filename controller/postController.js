@@ -12,13 +12,14 @@ const createPosts = async (req,res) => {
     if(!req?.body?.title || !req?.body?.datetime || !req?.body?.body){
         return res.status(400).json({message: "Not sufficient information provided"});
     }
-    const {title, body, datetime, image} = req.body;
+    const {title, body, datetime, image, imgId} = req.body;
     try {
         const response = await Post.create({
             title,
             body,
             datetime,
-            image
+            image, 
+            imgId
         })
         const id = response._id.toHexString();
         res.status(200).json({id});
