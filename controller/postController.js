@@ -1,3 +1,4 @@
+
 const Post = require('../models/post')
 
 const getPosts = async (req,res) => {
@@ -11,12 +12,13 @@ const createPosts = async (req,res) => {
     if(!req?.body?.title || !req?.body?.datetime || !req?.body?.body){
         return res.status(400).json({message: "Not sufficient information provided"});
     }
-    const {title, body, datetime} = req.body;
+    const {title, body, datetime, image} = req.body;
     try {
         const response = await Post.create({
             title,
             body,
-            datetime
+            datetime,
+            image
         })
         const id = response._id.toHexString();
         res.status(200).json({id});
@@ -33,10 +35,11 @@ const updatePosts = async(req,res) => {
     if(!post){
         return res.status(204).json({message: `NO such Post found`});
     }
-    const {title, body, datetime} = req.body;
+    const {title, body, datetime, image} = req.body;
     post.body=body;
     post.title=title;
     post.datetime=datetime
+    post.image=image
     const result = await post.save();
     res.json(result);
 }

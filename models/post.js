@@ -14,6 +14,10 @@ const postSchema = new Schema({
     body:{
         type: String,
         required: true
+    },
+    image:{
+        type: String,
+        default: "NA"
     }
 })
 
