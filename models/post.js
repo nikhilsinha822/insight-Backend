@@ -17,9 +17,15 @@ const postSchema = new Schema({
     },
     image:{
         type: String,
+        required: true
     },
     imgId:{
-        type: String
+        type: String,
+        required: true
+    },
+    sub:{
+        type: String,
+        required: true
     }
 })
 
