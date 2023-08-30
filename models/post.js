@@ -23,10 +23,14 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
-    sub:{
-        type: String,
-        required: true
+    user:{
+        sub: String,
+        name: String,
+        username: String,
+        email: String,
+        photo: String,
     }
 })
 
 module.exports = mongoose.model('Post', postSchema);
+

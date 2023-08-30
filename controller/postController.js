@@ -18,7 +18,7 @@ const createPosts = async (req, res) => {
     }
     const accessToken = req.headers.authorization.split(' ')[1];
     const user = await getUserDetails(accessToken)
-    const sub = user.data.sub.split('|')[1];
+    const { name, nickname, picture, email, sub } = user.data
     const { title, body, datetime, image, imgId } = req.body;
     try {
         const response = await Post.create({
@@ -27,10 +27,18 @@ const createPosts = async (req, res) => {
             datetime,
             image,
             imgId,
-            sub
+            user: {
+                name,
+                username: nickname,
+                email,
+                photo: picture,
+                sub: sub.split('|')[1]
+            }
         })
-        const id = response._id.toHexString();
-        res.status(200).json({ id, sub });
+
+        const _id = response._id.toHexString();
+        const data = response._doc.user
+        res.status(200).json({ _id, user:data});
     }
     catch (err) {
         console.log(err);
