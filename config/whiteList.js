@@ -1,6 +1,6 @@
 // cors - cross origin resource sharing
 const whitelist = [
-  "https://quickpens.netlify.app",
+  "https://blog-insight.netlify.app/",
   "http://localhost:5173",
 ];
 
