@@ -51,15 +51,17 @@ const updatePosts = async (req, res) => {
     }
     const accessToken = req.headers?.authorization?.split(' ')[1];
     const user = await getUserDetails(accessToken)
-    if (req.body?.user?.sub != user?.data?.sub?.split('|')[1]){
-        return res.status(401).json({ message: "Unauthorized" })
-    }
+
     if (!req?.params?.id) {
         return res.status(400).json({ message: "Not sufficient information provided" });
     }
     const post = await Post.findOne({ _id: req.params.id }).exec();
     if (!post) {
         return res.status(204).json({ message: `No such post found` });
+    }
+
+    if (post?.user?.sub != user?.data?.sub?.split('|')[1]){
+        return res.status(401).json({ message: "Unauthorized" })
     }
     const { title, body, datetime, image, imgId } = req.body;
     post.body = body;
@@ -71,7 +73,6 @@ const updatePosts = async (req, res) => {
         post.image = image
         post.imgId = imgId
     }
-
     const result = await post.save();
     res.json(result);
 }
@@ -81,17 +82,18 @@ const deletePosts = async (req, res) => {
     }
     const accessToken = req.headers?.authorization?.split(' ')[1];
     const user = await getUserDetails(accessToken)
-    if (req.body?.user?.sub != user?.data?.sub?.split('|')[1]){
-        return res.status(401).json({ message: "Unauthorized" })
-    }
     if (!req?.params?.id) {
         return res.status(400).json({ message: "Not sufficient information provided" });
     }
     const post = await Post.findOne({ _id: req.params.id }).exec();
-    await deleteImage(post.imgId);
+
     if (!post) {
         return res.status(204).json({ message: `No such Post found` });
     }
+    if (post?.user?.sub != user?.data?.sub?.split('|')[1]){
+        return res.status(401).json({ message: "Unauthorized" })
+    }
+    await deleteImage(post.imgId);
     const result = await post.deleteOne({ _id: req.body.id });
     res.json(result);
 }
