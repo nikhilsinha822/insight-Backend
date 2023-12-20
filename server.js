@@ -15,6 +15,7 @@ app.use(express.urlencoded({extended: false}));
 
 
 app.use('/',require('./routes/api/post'))
+app.use('/feedback', require('./routes/api/contact'))
 
 mongoose.connection.once("open", () => {
     console.log("Connected to mongoDB");
